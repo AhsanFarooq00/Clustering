@@ -14,15 +14,7 @@ from sklearn.cluster import KMeans
 from scipy.optimize import curve_fit
 from scipy import stats
 
-# Define the err_ranges function for confidence intervals
-def err_ranges(x, y, model, params, pcov, alpha=0.05):
-    perr = np.sqrt(np.diag(pcov))
-    nstd = abs(stats.norm.ppf(alpha / 2.))  # 2-tailed z score
-    lower = np.zeros_like(x)
-    upper = np.zeros_like(x)
-    for i in range(len(x)):
-        lower[i], upper[i] = stats.norm.interval(alpha, loc=model(x[i], *params), scale=perr.sum())
-    return lower, upper
+
 
 # Your provided data
 years = [1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020]
@@ -86,17 +78,7 @@ plt.show()
 def linear_func(x, a, b):
     return a * x + b
 
-# Fit the model
-popt, pcov = curve_fit(linear_func, data['Year'], data['Australia_GDP_Per_Capita'])
-
-# Predictions for the next 10 years
-future_years = np.arange(2021, 2031)
-predicted_values = linear_func(future_years, *popt)
-
-# Confidence range
-lower_bound, upper_bound = err_ranges(future_years, data['Australia_GDP_Per_Capita'], linear_func, popt, pcov)
-
-# Plotting the curve fit
+ing the curve fit
 plt.figure(figsize=(12, 6))
 plt.scatter(data['Year'], data['Australia_GDP_Per_Capita'], label='Actual Data')
 plt.plot(future_years, predicted_values, label='Best Fitting Function', color='orange')
